@@ -8,19 +8,12 @@
 <span style="color: lightskyblue;">此项目将在DarkNet上训练的开源的yolov3模型首先转化为onnx模型，再使用TensorRT将onnx模型转化为TensorRT支持的trt模型，旨在对比模型转换前后的推理准确率、推理速度以及内存或显存占用并做比较</span>
 
 <span style="color: lightskyblue;">对比的结果如下表所示：</span>
-<div align="center">
 
-| Class      | Images | Instances | Box(P | R | mAP50 | mAP50-95) |
-|------------|--------|-----------|-------|---|-------|-----------|
-| all        | 1497   | 7465      | 0.934 | 0.866 | 0.929 | 0.713 |
-| Pedestrian | 1497   | 965       | 0.922 | 0.772 | 0.877 | 0.554 |
-| Car        | 1497   | 6500      | 0.945 | 0.96 | 0.982 | 0.873 |
+<div align="center">
+<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/1.png" alt="GPU Memory 1">
+<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/2.png" alt="GPU Memory 2">
 
 </div>
-
-以`Car`为例说明，精确率`P=0.945`，召回率`R=0.96`，`mAP50=0.982`，`mAP50-95=0.873`。<br>
-评估指标显示`Car`的召回率和`mAP50-95`比`Pedestrian`高出较多，这是因为整个`KITTI`数据集中行人的数据量大量少于车的数据量。<br>上述指标的计算公式如[博客](https://blog.csdn.net/qq_63708623/article/details/128508776)所描述。
-
 
 </div>
 
@@ -80,4 +73,4 @@ python yolov3_to_onnx.py -d .
 python .\onnx_to_tensorrt.py --img_name dog.jpg -d .
 ```
 运行成功则在当前目录下会得到yolov3.trt文件；注意，该文件同时运行了对图片的检测，因此检测输出的图像在当前目录下`bboxes.png`。
-<img width="1024" src="https://github.com/NoMoreBeauty/ultralytics/blob/main/runs/train/results.png" alt="Train Result">
+<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/bboxes.png" alt="Test Result">
