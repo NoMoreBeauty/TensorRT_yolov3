@@ -72,5 +72,5 @@ python yolov3_to_onnx.py -d .
 ```bash
 python .\onnx_to_tensorrt.py --img_name dog.jpg -d .
 ```
-运行成功则在当前目录下会得到yolov3.trt文件；注意，该文件同时运行了对图片的检测，因此检测输出的图像在当前目录下`bboxes.png`。
+运行成功则在当前目录下会得到yolov3.trt文件；注意，该文件同时运行了对图片的检测，因此检测输出的图像在当前目录下`bboxes.png`。<br>
 <img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/bboxes.png" alt="Test Result">
