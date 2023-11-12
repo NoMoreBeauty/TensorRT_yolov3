@@ -5,9 +5,15 @@
 
 [TensorRT](https://github.com/NVIDIA/TensorRT) 是一个有助于在NVIDIA图形处理单元（GPU）上高性能推理c++库。它旨在与TesnsorFlow、Caffe、Pytorch以及MXNet等训练框架以互补的方式进行工作，专门致力于在GPU上快速有效地进行网络推理。<br>
 
-<span style="color: lightskyblue;">此项目将在DarkNet上训练的开源的yolov3模型首先转化为onnx模型，再使用TensorRT将onnx模型转化为TensorRT支持的trt模型，旨在对比模型转换前后的推理准确率、推理速度以及内存或显存占用并做比较</span>
+<span style="color: lightskyblue;">此项目将在DarkNet上训练的开源的yolov3模型首先转化为onnx模型，再使用TensorRT将onnx模型转化为TensorRT支持的trt模型，旨在对比模型转换前后的推理准确率、推理速度以及内存或显存占用并做比较。</span>
 
-实验对比了使用`PyTorch加载pt模型推理`与`TensorRT加载trt模型推理`同一张图片的准确率，推理速度和显存占用，对比的结果如下表所示：
+实验对比了使用`PyTorch`加载`pt`模型推理与`TensorRT`加载`trt`模型推理同一张图片的准确率。<br>
+<div align="center">
+<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/result.png" alt="GPU Memory 1">
+
+</div>
+
+推理速度和显存占用，对比的结果如下表所示：
 <div align="center">
 
 |  | PyTorch | TensorRT |
@@ -21,7 +27,7 @@
 运行过程中的显存占用如下如所示（左图PyTorch，右图TensorRT）:
 
 <div align="center">
-<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/1.png" alt="GPU Memory 1">
+<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/memory.png" alt="GPU Memory 1">
 
 </div>
 
@@ -29,6 +35,8 @@
 PyTorch占用显存主要来自计算所需的中间结果Tensor。TensorRT通过图优化可以减少中间张量,同时支持动态分配内存,理论上可以降低内存消耗。
 
 但是TensorRT使用固定流水线的TRT Engine,事先确定最大显存需求,而PyTorch可能因为批量大小变化导致的动态内存分配问题。
+
+而由于TensorRT对模型进行了一部分的剪枝，所以置信度相比于Pytorch稍有下降。
 
 </div>
 
