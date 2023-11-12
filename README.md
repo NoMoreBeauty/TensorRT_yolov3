@@ -99,3 +99,7 @@ python .\onnx_to_tensorrt.py --img_name dog.jpg -d .
 <div align="center">
 <img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/bboxes.png" alt="Test Result">
 </div>
+
+## <div align="center">模型文件</div>
+
+模型文件可以在[百度网盘（提取码1234）](https://pan.baidu.com/s/1bgVb8oUS0M5grl4iyDsdQw)中下载，`.cfg`和`.weights`文件应该放在`samples/python/yolov3_onnx/`下。
