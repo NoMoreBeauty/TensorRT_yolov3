@@ -22,7 +22,7 @@ import numpy as np
 import tensorrt as trt
 import pycuda.driver as cuda
 import argparse
-
+import time
 # Use autoprimaryctx if available (pycuda >= 2021.1) to
 # prevent issues with other modules that rely on the primary
 # device context.
@@ -134,6 +134,7 @@ def main():
     # Create a pre-processor object by specifying the required input resolution for YOLOv3
     preprocessor = PreprocessYOLO(input_resolution_yolov3_HW)
     # Load an image from the specified input path, and return it together with  a pre-processed version
+    
     image_raw, image = preprocessor.process(input_image_path)
     # Store the shape of the original input image in WH format, we will need it for later
     shape_orig_WH = image_raw.size
@@ -149,8 +150,10 @@ def main():
         print("Running inference on image {}...".format(input_image_path))
         # Set host input to the image. The common.do_inference function will copy the input to the GPU before executing.
         inputs[0].host = image
+        
         trt_outputs = common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)
-
+        
+    
     # Before doing post-processing, we need to reshape the outputs as the common.do_inference will give us flat arrays.
     trt_outputs = [output.reshape(shape) for output, shape in zip(trt_outputs, output_shapes)]
 
@@ -173,11 +176,13 @@ def main():
     }
 
     postprocessor = PostprocessYOLO(**postprocessor_args)
-
+    
     # Run the post-processing algorithms on the TensorRT outputs and get the bounding box details of detected objects
+    
     boxes, classes, scores = postprocessor.process(trt_outputs, (shape_orig_WH))
+
     # Draw the bounding boxes onto the original input image and save it as a PNG file
-    print(scores)
+
     obj_detected_img = draw_bboxes(image_raw, boxes, scores, classes, ALL_CATEGORIES)
     output_image_path = "bboxes.png"
     obj_detected_img.save(output_image_path, "PNG")
@@ -185,5 +190,6 @@ def main():
 
 
 if __name__ == "__main__":
+    
     main()
     

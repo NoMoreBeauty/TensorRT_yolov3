@@ -154,6 +154,7 @@ def allocate_buffers(engine):
         dtype = trt.nptype(engine.get_binding_dtype(binding))
         # Allocate host and device buffers
         host_mem = cuda.pagelocked_empty(size, dtype)
+        print("this is",host_mem.nbytes)
         device_mem = cuda.mem_alloc(host_mem.nbytes)
         # Append the device buffer to device bindings.
         bindings.append(int(device_mem))

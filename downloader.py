@@ -236,6 +236,7 @@ def getFilePath_infer(path):
         parser.add_argument(
             "-d",
             "--data",
+            default=".", 
             help="Specify the data directory where it is saved in. $TRT_DATA_DIR will be overwritten by this argument.",
         )
         parser.add_argument(
@@ -245,9 +246,12 @@ def getFilePath_infer(path):
             help="image name")
         args, _ = parser.parse_known_args()
         TRT_DATA_DIR = os.environ.get("TRT_DATA_DIR", None) if args.data is None else args.data
+        path += args.img_name
+    else:
+        path += "dog.jpg"
     if TRT_DATA_DIR is None:
         raise ValueError("Data directory must be specified by either `-d $DATA` or environment variable $TRT_DATA_DIR.")
-    path += args.img_name
+    
     fullpath = os.path.join(TRT_DATA_DIR, path)
     if not os.path.exists(fullpath):
         raise ValueError("Data file %s doesn't exist!" % fullpath)

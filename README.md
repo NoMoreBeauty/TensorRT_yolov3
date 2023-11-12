@@ -7,13 +7,28 @@
 
 <span style="color: lightskyblue;">此项目将在DarkNet上训练的开源的yolov3模型首先转化为onnx模型，再使用TensorRT将onnx模型转化为TensorRT支持的trt模型，旨在对比模型转换前后的推理准确率、推理速度以及内存或显存占用并做比较</span>
 
-<span style="color: lightskyblue;">对比的结果如下表所示：</span>
+实验对比了使用`PyTorch加载pt模型推理`与`TensorRT加载trt模型推理`同一张图片的准确率，推理速度和显存占用，对比的结果如下表所示：
+<div align="center">
+
+|  | PyTorch | TensorRT |
+|:-|-|-|
+| **Preprocess Cost** | 2.0ms | 1.6ms |
+| **Inferprocess Cost** | 64.8ms | 33.8ms |
+| **Postprocess Cost** | 3.0ms |  3.9ms |
+| **Confidence** | 0.94 | 0.92 |
+
+</div>
+运行过程中的显存占用如下如所示（左图PyTorch，右图TensorRT）:
 
 <div align="center">
 <img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/1.png" alt="GPU Memory 1">
-<img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/2.png" alt="GPU Memory 2">
 
 </div>
+
+查阅相关TensorRT资料，结合评估结果，分析得到PyTorch推理直接运行模型前向计算,速度较慢；而TensorRT通过图优化、量化等手段,会加速模型推理。特别是使用FP16/INT8等数据类型,可以大幅提升速度。因此TensorRT理论上可以实现2-5倍左右的推理加速。
+PyTorch占用显存主要来自计算所需的中间结果Tensor。TensorRT通过图优化可以减少中间张量,同时支持动态分配内存,理论上可以降低内存消耗。
+
+但是TensorRT使用固定流水线的TRT Engine,事先确定最大显存需求,而PyTorch可能因为批量大小变化导致的动态内存分配问题。
 
 </div>
 
@@ -73,4 +88,6 @@ python yolov3_to_onnx.py -d .
 python .\onnx_to_tensorrt.py --img_name dog.jpg -d .
 ```
 运行成功则在当前目录下会得到yolov3.trt文件；注意，该文件同时运行了对图片的检测，因此检测输出的图像在当前目录下`bboxes.png`。<br>
+<div align="center">
 <img width="600" src="https://github.com/NoMoreBeauty/TensorRT_yolov3/blob/main/bboxes.png" alt="Test Result">
+</div>
